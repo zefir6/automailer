@@ -1,0 +1,3 @@
+﻿<p>Tutaj wpisujemy cokolwiek, a treść uzupełni się elementami z formatki. Tekst można formatować prostymi tagami z htmla, np. to <b>będzie pogrubione</b> a to <i>będzie kursywa</i></p>
+<p>Cześć {Pole 1} co u Ciebie?</p>
+<p>Chcieliśmy Ci dać znać, że będziesz grał jako {Pole 2} na {Pole 3}</p>
