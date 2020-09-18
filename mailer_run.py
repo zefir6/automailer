@@ -1,3 +1,4 @@
+# coding=UTF-8
 from flask import Flask, render_template, flash, redirect, url_for, make_response, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 import os
@@ -120,7 +121,7 @@ def run_mailing(mail_template_credentials_json, json_keyfile, lista_odbiorcow, s
                 wzor_maila = pobierz_wzor_maila(credentials_json=mail_template_credentials_json,
                                                 DOCUMENT_ID=rekord_odbiorcy['Formatka'])
                 print(wzor_maila.format(**pola))
-                gmail_message(sender=informacje_ogolne['nadawca'], gmail_json=app.config['GMAIL_JSON'], subject=rekord_odbiorcy['Temat maila'], to=pola['email'], cc=informacje_ogolne['mail_dw'], contents=wzor_maila.format(**pola))
+                gmail_message(sender=informacje_ogolne['nadawca'], gmail_json=app.config['GMAIL_JSON'], subject=rekord_odbiorcy['Temat maila'], to=pola['email'], cc=informacje_ogolne['mail_dw'], contents=wzor_maila.format(**pola), auth_hostname=app.config['GMAIL_AUTH_HOSTNAME'], auth_port=app.config['GMAIL_AUTH_PORT'])
                 arkusz_sesji.update_cell(wiersz, status_column, statuses['sent'])
             else:
                 print("Wiersz {} już przetworzony".format(wiersz))
