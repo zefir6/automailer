@@ -7,7 +7,7 @@ Przygotowanie projektu do działania:
 - instalujemy sobie virtualenv ```python3 -m pip install --user virtualenv```
 - tworzymy virtualenv ```python3 -m venv env```
 - aktywujemy virtualenv ```source env/bin/activate```
-- wymagane moduły pythona mozna zainstalowac komenda pip install -r requirements.txt
+- wymagane moduły pythona mozna zainstalowac komenda pip ```install -r requirements.txt```
 
 Samo uruchomienie aplikacji to ustawienie zmiennej środowiskowej `APP_SETTINGS` na odpowiednią wartość odpowiadającą zestawowi konfiguracyjnemu z config.py i uruchomienie polecenia `python mailer_run.py`
 
