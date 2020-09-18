@@ -21,7 +21,7 @@ Inne ustawienia można zmieniać wchodząc do pliku `config.py` i edytując odpo
 1. Wejdź na <https://console.developers.google.com/> i utwórz nowy projekt
 2. W projekcie wybierz "Dane Logowania" i utwórz Konto Usługi
 3. Utwórz klucz prywatny
-4. Pobierz go jako plik .json i zmień jego nazwę na "larpm
+4. Pobierz go jako plik .json i zmień jego nazwę na `keyfile_do_listy_odbiorcow.json`
 4. Nadaj danemu kontu (przykładowa nazwa to: "jakieskonto@whatever-2812012.iam.gserviceaccount.com") dostęp do plików templatki i arkusza google którego planujesz uywać.
 5. Wejdź na <https://console.developers.google.com/apis/api/sheets.googleapis.com/> wybierz swój projekt i kliknij "Włącz"
 5. Wejdź na <https://console.developers.google.com/apis/api/docs.googleapis.com/> wybierz swój projekt i kliknij "Włącz"

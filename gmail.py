@@ -13,7 +13,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 
-def gmail_auth(gmail_json):
+def gmail_auth(gmail_json, auth_port, auth_hostname):
   creds = None
 
   SCOPES = [
@@ -34,7 +34,7 @@ def gmail_auth(gmail_json):
       creds.refresh(Request())
     else:
       flow = InstalledAppFlow.from_client_secrets_file(gmail_json, SCOPES)
-      creds = flow.run_local_server(port=0)
+      creds = flow.run_local_server(port=auth_port, host=auth_hostname)
       # Save the credentials for the next run
       with open('gmail_token.pickle', 'wb') as token:
         pickle.dump(creds, token)
@@ -170,9 +170,9 @@ def CreateMessageWithAttachment(sender, to, subject, message_text, file_dir,
 
   return {'raw': base64.urlsafe_b64encode(message.as_string())}
 
-def gmail_message(sender, subject, to, contents, gmail_json, cc=None):
+def gmail_message(sender, subject, to, contents, gmail_json, auth_hostname, auth_port, cc=None):
   print("Gmailing email")
-  service = gmail_auth(gmail_json)
+  service = gmail_auth(gmail_json, auth_hostname=auth_hostname, auth_port=auth_port)
   message = CreateMessage(sender=sender, subject=subject, to=to,
                           message_text=contents, cc=cc)
   send_message(service, 'me', message)
