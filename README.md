@@ -7,7 +7,7 @@ Przygotowanie projektu do działania:
 - instalujemy sobie virtualenv ```python3 -m pip install --user virtualenv```
 - tworzymy virtualenv ```python3 -m venv env```
 - aktywujemy virtualenv ```source env/bin/activate```
-- wymagane moduły pythona mozna zainstalowac komenda pip -r requirements.txt
+- wymagane moduły pythona mozna zainstalowac komenda pip ```install -r requirements.txt```
 
 Samo uruchomienie aplikacji to ustawienie zmiennej środowiskowej `APP_SETTINGS` na odpowiednią wartość odpowiadającą zestawowi konfiguracyjnemu z config.py i uruchomienie polecenia `python mailer_run.py`
 
@@ -22,9 +22,9 @@ Inne ustawienia można zmieniać wchodząc do pliku `config.py` i edytując odpo
 2. W projekcie wybierz "Dane Logowania" i utwórz Konto Usługi
 3. Utwórz klucz prywatny
 4. Pobierz go jako plik .json i zmień jego nazwę na "keyfile_do_listy_odbiorcow.json"
-4. Nadaj danemu kontu (przykładowa nazwa to: "jakieskonto@whatever-2812012.iam.gserviceaccount.com") dostęp do plików templatki i arkusza google którego planujesz uywać.
-5. Wejdź na <https://console.developers.google.com/apis/api/sheets.googleapis.com/> wybierz swój projekt i kliknij "Włącz"
-5. Wejdź na <https://console.developers.google.com/apis/api/docs.googleapis.com/> wybierz swój projekt i kliknij "Włącz"
+5. Nadaj danemu kontu (przykładowa nazwa to: "jakieskonto@whatever-2812012.iam.gserviceaccount.com") dostęp do plików templatki i arkusza google którego planujesz uywać.
+6. Wejdź na <https://console.developers.google.com/apis/api/sheets.googleapis.com/> wybierz swój projekt i kliknij "Włącz"
+7. Wejdź na <https://console.developers.google.com/apis/api/docs.googleapis.com/> wybierz swój projekt i kliknij "Włącz"
 
 Uwaga: nazwy jsonów mona oczywiście zmienić w `config.py`
 
