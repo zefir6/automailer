@@ -17,14 +17,10 @@ Recursively extracts the text from a Google Doc.
 """
 from __future__ import print_function
 
-from apiclient import discovery
-from httplib2 import Http
-# from oauth2client import client
-# from oauth2client import file
-# from oauth2client import tools
-from oauth2client.service_account import ServiceAccountCredentials
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
 
-SCOPES = 'https://www.googleapis.com/auth/documents.readonly'
+SCOPES = [ 'https://www.googleapis.com/auth/documents.readonly' ]
 DISCOVERY_DOC = 'https://docs.googleapis.com/$discovery/rest?version=v1'
 
 
@@ -70,10 +66,11 @@ def read_strucutural_elements(elements):
 
 def pobierz_wzor_maila(DOCUMENT_ID, credentials_json):
     """Uses the Docs API to print out the text of a document."""
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(credentials_json, SCOPES)
-    http = credentials.authorize(Http())
-    docs_service = discovery.build(
-        'docs', 'v1', http=http, discoveryServiceUrl=DISCOVERY_DOC)
+    credentials = service_account.Credentials.from_service_account_file(
+        credentials_json,
+        scopes=SCOPES,
+    )
+    docs_service = build("docs", "v1", credentials=credentials)
     doc = docs_service.documents().get(documentId=DOCUMENT_ID).execute()
     doc_content = doc.get('body').get('content')
 

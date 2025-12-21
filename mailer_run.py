@@ -1,13 +1,15 @@
 # coding=UTF-8
+from email.policy import default
+
 from flask import Flask, render_template, flash, redirect, url_for, make_response, jsonify
 # from apscheduler.schedulers.background import BackgroundScheduler
-# import os
+import os
 import time
 from itsdangerous import URLSafeTimedSerializer
 
 import config
 from get_template import pobierz_wzor_maila
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 import gspread
 from mailgun import mailgun_message
 from flask_httpauth import HTTPBasicAuth
@@ -17,8 +19,8 @@ from time import sleep
 
 
 app = Flask(__name__)
-# app.config.from_object(os.environ['APP_SETTINGS'])
-app.config.from_object(config.DevelopmentConfig)
+# app.config.from_object(os.environ['APP_SETTINGS'], default="config.Config")
+app.config.from_object(config.Config)
 
 auth = HTTPBasicAuth()
 
@@ -58,8 +60,11 @@ def confirm_token(token, expiration=86400):
     return email
 
 def otworz_arkusz():
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(app.config['MAILLIST_JSON_KEYFILE'], app.config['SCOPE'])
-    gc = gspread.authorize(credentials)
+    creds = service_account.Credentials.from_service_account_file(
+        app.config['MAILLIST_JSON_KEYFILE'],
+        scopes=app.config['SCOPE'],   # uwaga: najlepiej lista scope'ów
+    )
+    gc = gspread.authorize(creds)
     arkusz = gc.open_by_key(app.config['MAILLIST_GDOCS_ID'])
     return arkusz
 
@@ -72,8 +77,11 @@ def update_user_status(arkusz, email, status):
             arkusz.update_cell(wiersz, status_column, status)
 
 def run_mailing(mail_template_credentials_json, json_keyfile, lista_odbiorcow, scope):
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_keyfile, scope)
-    gc = gspread.authorize(credentials)
+    creds = service_account.Credentials.from_service_account_file(
+        json_keyfile,
+        scopes=scope,  # też najlepiej lista
+    )
+    gc = gspread.authorize(creds)
     arkusz = gc.open_by_key(lista_odbiorcow)
     arkusz_sesji = arkusz.get_worksheet(0)
     arkusz_informacje_ogolne = arkusz.get_worksheet(1)
@@ -125,7 +133,12 @@ def run_mailing(mail_template_credentials_json, json_keyfile, lista_odbiorcow, s
                                                 DOCUMENT_ID=rekord_odbiorcy['Formatka'])
                 # print(wzor_maila.format())
                 print(wzor_maila.format(**pola))
-                mailgun_message(sender=informacje_ogolne['nadawca'], subject=rekord_odbiorcy['Temat maila'], to=pola['email'], cc=informacje_ogolne['mail_dw'], contents=wzor_maila.format(**pola))
+                mailgun_message(MAILGUN_DOMAIN=app.config['MAILGUN_DOMAIN'],
+                                MAILGUN_API_BASE=app.config['MAILGUN_API_BASE'],
+                                MAILGUN_API_KEY=app.config['MAILGUN_API_KEY'],
+                                sender = informacje_ogolne['nadawca'], subject = rekord_odbiorcy['Temat maila'],
+                                to = pola['email'], cc = informacje_ogolne['mail_dw'],
+                                contents = wzor_maila.format(**pola))
                 arkusz_sesji.update_cell(wiersz, status_column, statuses['sent'])
             else:
                 print("Wiersz {} już przetworzony".format(wiersz))
