@@ -19,31 +19,14 @@ from __future__ import print_function
 
 from apiclient import discovery
 from httplib2 import Http
-from oauth2client import client
-from oauth2client import file
-from oauth2client import tools
+# from oauth2client import client
+# from oauth2client import file
+# from oauth2client import tools
 from oauth2client.service_account import ServiceAccountCredentials
 
 SCOPES = 'https://www.googleapis.com/auth/documents.readonly'
 DISCOVERY_DOC = 'https://docs.googleapis.com/$discovery/rest?version=v1'
 
-
-def get_credentials(credentials_json):
-    """Gets valid user credentials from storage.
-
-    If nothing has been stored, or if the stored credentials are invalid,
-    the OAuth 2.0 flow is completed to obtain the new credentials.
-
-    Returns:
-        Credentials, the obtained credential.
-    """
-    store = file.Storage('token.json')
-    credentials = store.get()
-
-    if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(credentials_json, SCOPES)
-        credentials = tools.run_flow(flow, store)
-    return credentials
 
 def read_paragraph_element(element):
     """Returns the text in the given ParagraphElement.
@@ -87,7 +70,6 @@ def read_strucutural_elements(elements):
 
 def pobierz_wzor_maila(DOCUMENT_ID, credentials_json):
     """Uses the Docs API to print out the text of a document."""
-    # credentials = get_credentials(credentials_json)
     credentials = ServiceAccountCredentials.from_json_keyfile_name(credentials_json, SCOPES)
     http = credentials.authorize(Http())
     docs_service = discovery.build(
@@ -99,12 +81,11 @@ def pobierz_wzor_maila(DOCUMENT_ID, credentials_json):
 
 def main():
     """Uses the Docs API to print out the text of a document."""
-    DOCUMENT_ID = '1vUaMNRQz3gS2IvjNnKvZv7hhhhLf8E4Z4HuPN-jKK0g'
-    credentials_json = 'larpmailer_oauth.json'
-    credentials = get_credentials(credentials_json)
+    DOCUMENT_ID = '157jovQeLsLQyIBS3r_-WQVNCKof7Ye4-wTPG4JUxGbc'
+    credentials_json = 'credentialsfile_do_listy_odbiorcow.json'
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(credentials_json, SCOPES)
     http = credentials.authorize(Http())
-    docs_service = discovery.build(
-        'docs', 'v1', http=http, discoveryServiceUrl=DISCOVERY_DOC)
+    docs_service = discovery.build('docs', 'v1', http=http, discoveryServiceUrl=DISCOVERY_DOC)
     doc = docs_service.documents().get(documentId=DOCUMENT_ID).execute()
     doc_content = doc.get('body').get('content')
     print(read_strucutural_elements(doc_content))

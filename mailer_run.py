@@ -1,21 +1,24 @@
 # coding=UTF-8
 from flask import Flask, render_template, flash, redirect, url_for, make_response, jsonify
-from apscheduler.schedulers.background import BackgroundScheduler
-import os
+# from apscheduler.schedulers.background import BackgroundScheduler
+# import os
 import time
-import atexit
 from itsdangerous import URLSafeTimedSerializer
+
+import config
 from get_template import pobierz_wzor_maila
 from oauth2client.service_account import ServiceAccountCredentials
 import gspread
-from gmail import gmail_message
+from mailgun import mailgun_message
 from flask_httpauth import HTTPBasicAuth
-import threading
+# import threading
 import random
 from time import sleep
 
+
 app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
+# app.config.from_object(os.environ['APP_SETTINGS'])
+app.config.from_object(config.DevelopmentConfig)
 
 auth = HTTPBasicAuth()
 
@@ -84,8 +87,8 @@ def run_mailing(mail_template_credentials_json, json_keyfile, lista_odbiorcow, s
     if czy_procesowac == 'TAK':
         ### TESTY START
 
-        statuses = {'sent': 'Mail Wysłany', 'confirmed': 'Gracz Potwierdził'}
-        wyslane = [ 'Mail Wysłany', 'Gracz Potwierdził']
+        statuses = {'sent': 'Mail Wysłany', 'confirmed': 'Uczestnik Potwierdził'}
+        wyslane = [ 'Mail Wysłany', 'Uczestnik Potwierdził']
 
         odbiorcy = arkusz_sesji.get_all_records()
 
@@ -120,8 +123,9 @@ def run_mailing(mail_template_credentials_json, json_keyfile, lista_odbiorcow, s
                 print("Próbujemy uzyć formatki maila z: {}".format(rekord_odbiorcy['Formatka']))
                 wzor_maila = pobierz_wzor_maila(credentials_json=mail_template_credentials_json,
                                                 DOCUMENT_ID=rekord_odbiorcy['Formatka'])
+                # print(wzor_maila.format())
                 print(wzor_maila.format(**pola))
-                gmail_message(sender=informacje_ogolne['nadawca'], gmail_json=app.config['GMAIL_JSON'], subject=rekord_odbiorcy['Temat maila'], to=pola['email'], cc=informacje_ogolne['mail_dw'], contents=wzor_maila.format(**pola), auth_hostname=app.config['GMAIL_AUTH_HOSTNAME'], auth_port=app.config['GMAIL_AUTH_PORT'])
+                mailgun_message(sender=informacje_ogolne['nadawca'], subject=rekord_odbiorcy['Temat maila'], to=pola['email'], cc=informacje_ogolne['mail_dw'], contents=wzor_maila.format(**pola))
                 arkusz_sesji.update_cell(wiersz, status_column, statuses['sent'])
             else:
                 print("Wiersz {} już przetworzony".format(wiersz))
@@ -129,8 +133,8 @@ def run_mailing(mail_template_credentials_json, json_keyfile, lista_odbiorcow, s
         # print(arkusz_sesji.col_values(1))
         # print(arkusz_sesji.col_values(2))
 
-        arkusz_informacje_ogolne.update_acell('C2', 'NIE')
-        print("""Zmieniam "Czy wysyłać" z powrotem na NIE""")
+        # arkusz_informacje_ogolne.update_acell('C2', 'NIE')
+        # print("""Zmieniam "Czy wysyłać" z powrotem na NIE""")
     else:
         print("Ustawione na nie, nic nie robimy!")
 
@@ -196,7 +200,7 @@ def confirm_email(token):
         print("{} confirmed his token".format(email))
         arkusz = otworz_arkusz()
         arkusz_odbiorcy = arkusz.get_worksheet(0)
-        update_user_status(arkusz_odbiorcy, email, 'Gracz Potwierdził')
+        update_user_status(arkusz_odbiorcy, email, 'Uczestnik Potwierdził')
     except:
         flash('The confirmation link is invalid or has expired.', 'danger')
         print('The confirmation link is invalid or has expired.', 'danger')

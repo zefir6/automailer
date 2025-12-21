@@ -1,3 +1,8 @@
+.DS_Store
+.idea/automailer.iml
+.idea/misc.xml
+.idea/*
+.idea/
 ,idea/
 ,idea/*
 webapp_venv/

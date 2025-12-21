@@ -1,6 +1,12 @@
 __pycache__
-.git
-.idea
-*.pyc
+credentialsfile_do_listy_odbiorcow.json
+docker-compose.yml
+Dockerfile
 env
-azure
+keyfile_do_listy_odbiorcow.json
+klucz_do_gmaila.json
+mailgun_zjava.py
+Odbiorcy.ods
+README.md
+run.sh
+Template1.txt
