@@ -68,10 +68,10 @@ def otworz_arkusz():
     arkusz = gc.open_by_key(app.config['MAILLIST_GDOCS_ID'])
     return arkusz
 
-def update_user_status(arkusz, email, status):
+def update_user_status(arkusz, id, status):
     odbiorcy = arkusz.get_all_records()
     for rekord_odbiorcy in odbiorcy:
-        if rekord_odbiorcy['Email Odbiorcy'] == email:
+        if rekord_odbiorcy['ID'] == id:
             status_column = arkusz.find("Status").col
             wiersz = odbiorcy.index(rekord_odbiorcy) + 2
             arkusz.update_cell(wiersz, status_column, status)
@@ -95,7 +95,7 @@ def run_mailing(mail_template_credentials_json, json_keyfile, lista_odbiorcow, s
     if czy_procesowac == 'TAK':
         ### TESTY START
 
-        statuses = {'sent': 'Mail Wysłany', 'confirmed': 'Uczestnik Potwierdził'}
+        statuses = {'sent': 'Mail Wysłany', 'confirmed': 'Uczestnik Potwierdził', 'exclude': 'Nie wysyłamy', 'skip': 'Skip'}
         wyslane = [ 'Mail Wysłany', 'Uczestnik Potwierdził']
 
         odbiorcy = arkusz_sesji.get_all_records()
@@ -109,6 +109,7 @@ def run_mailing(mail_template_credentials_json, json_keyfile, lista_odbiorcow, s
             # print(rekord_odbiorcy)
 
             pola = {
+                "ID": rekord_odbiorcy['ID'],
                 "email": rekord_odbiorcy['Email Odbiorcy'],
                 "Pole 1": rekord_odbiorcy['Pole 1'],
                 "Pole 2": rekord_odbiorcy['Pole 2'],
@@ -127,7 +128,7 @@ def run_mailing(mail_template_credentials_json, json_keyfile, lista_odbiorcow, s
 
             if status not in statuses.values():
                 print("Procesujemy rekord")
-                pola['link'] = confirmation_link(rekord_odbiorcy['Email Odbiorcy'])
+                pola['link'] = confirmation_link(rekord_odbiorcy['ID'])
                 print("Próbujemy uzyć formatki maila z: {}".format(rekord_odbiorcy['Formatka']))
                 wzor_maila = pobierz_wzor_maila(credentials_json=mail_template_credentials_json,
                                                 DOCUMENT_ID=rekord_odbiorcy['Formatka'])
@@ -213,7 +214,7 @@ def confirm_email(token):
         print("{} confirmed his token".format(email))
         arkusz = otworz_arkusz()
         arkusz_odbiorcy = arkusz.get_worksheet(0)
-        update_user_status(arkusz_odbiorcy, email, 'Uczestnik Potwierdził')
+        update_user_status(arkusz_odbiorcy, id=email, status='Uczestnik Potwierdził')
     except:
         flash('The confirmation link is invalid or has expired.', 'danger')
         print('The confirmation link is invalid or has expired.', 'danger')

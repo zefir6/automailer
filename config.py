@@ -29,6 +29,7 @@ class Config(object):
     MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN')
     MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
     DEPLOYMENT_NAME = 'prod'
+    PYTHON_UNBUFFERED = os.getenv('PYTHON_UNBUFFERED', default=True)
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = False
