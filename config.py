@@ -22,6 +22,7 @@ class Config(object):
     INCLUDE_LINK = os.getenv('INCLUDE_LINK', default=False)
     MAILLIST_GDOCS_ID=os.getenv('MAILLIST_GDOCS_ID')
     SERVER_NAME=os.getenv('SERVER_NAME', default='localhost')
+    PREFERRED_URL_SCHEME = os.getenv('PREFERRED_URL_SCHEME', default='http')
     MAILLIST_JSON_KEYFILE = os.getenv('MAILLIST_JSON_KEYFILE', default='keyfile_do_listy_odbiorcow.json')
     MAILLIST_JSON_CREDENTIALS_FILE = os.getenv('MAILLIST_JSON_CREDENTIALS_FILE', default='credentialsfile_do_listy_odbiorcow.json')
     MAILGUN_API_BASE = os.getenv('MAILGUN_API_BASE', default="https://api.eu.mailgun.net/v3")

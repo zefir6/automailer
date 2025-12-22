@@ -12,11 +12,6 @@ Przygotowanie projektu do działania:
 
 Samo uruchomienie aplikacji to ustawienie zmiennej środowiskowej `APP_SETTINGS` na odpowiednią wartość odpowiadającą zestawowi konfiguracyjnemu z config.py i uruchomienie polecenia `python mailer_run.py`
 
-Przykład:
-> APP_SETTINGS=config.DevelopmentConfig; python mailer_run.py
-
-Inne ustawienia można zmieniać wchodząc do pliku `config.py` i edytując odpowiednie zmienne.
-
 ## Konfiguracja obsługi arkuszy google
 
 1. Wejdź na <https://console.developers.google.com/> i utwórz nowy projekt
@@ -28,16 +23,6 @@ Inne ustawienia można zmieniać wchodząc do pliku `config.py` i edytując odpo
 7. Wejdź na <https://console.developers.google.com/apis/api/docs.googleapis.com/> wybierz swój projekt i kliknij "Włącz"
 
 Uwaga: nazwy jsonów mona oczywiście zmienić w `config.py`
-
-## Konfiguracja obsługi gmaila
-
-1. Wejdź na <https://console.developers.google.com/apis/api/gmail.googleapis.com/> wybierz swój projekt i kliknij "Włącz"
-2. W <https://console.developers.com> stwórz ekran akceptacji OAuth (podaj tylko nazwę aplikacji)
-3. W sekcji Dane Logowania stwórz nowe dane logowania, wybierając "Identyfikator klienta OAuth" a następnie Typ Aplikacji "Inna" (nazwa nie ma znaczenia)
-4. Pobierz plik wynikowy (nazwa zaczyna się od "client_secret_") i zmień jego nazwę na "klucz_do_gmaila.json"
-5. Po pierwszym testowym uruchomieniu aplikacja zarząda od ciebie autoryzacji (w konsoli wyświetli się URL), wejdź tam i potwierdź potrzebne uprawnienia
-6. Przeglądarka zostanie przekierowana na stronę podaną w konfiguracji pod pozycją `GMAIL_AUTH_HOSTNAME` i `GMAIL_AUTH_PORT` (na której aplikacja uruchomiła tymczasowy serwer www)
-7. Aplikacja utworzy plik `gmail_token.pickle`
 
 ## Uzywanie samej aplikacji
 
